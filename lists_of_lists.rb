@@ -107,11 +107,13 @@ opts = {}
 
 if page.image_urls && ! page.image_urls.empty?
   puts page.image_urls.inspect
+  
   image_url = filter_images(page.image_urls).sample
-
+  
   puts image_url
-
-  opts[:media] = save_to_tempfile(image_url)
+  if image_url && image_url != ""
+    opts[:media] = save_to_tempfile(image_url)
+  end
 end
   
 output = [ tweet_title, page.fullurl ].join("\n")
