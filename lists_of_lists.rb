@@ -39,6 +39,13 @@ def save_to_tempfile(url)
   open(dest, 'wb') do |file|
     file << open(url).read
   end
+
+  # if the image is too big, let's lower the quality a bit
+  if File.size(dest) > 5_000_000
+    `mogrify -quality 65% #{dest}`
+  end
+
+
   dest
 end
 
@@ -118,6 +125,10 @@ end
   
 output = [ tweet_title, page.fullurl ].join("\n")
 
-tweet output, opts
+begin
+  tweet(output, opts)
+rescue Exception => e
+  puts e.inspect
+end
 
 bot.config[:index] += 1
